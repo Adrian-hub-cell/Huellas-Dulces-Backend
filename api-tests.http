@@ -1,0 +1,79 @@
+### ==========================================
+### HUELLAS DULCES - API DE PRODUCTOS
+### ==========================================
+
+### 1. Crear producto
+POST http://localhost:8080/api/v1/products
+Content-Type: application/json
+
+{
+  "name": "Galletas de pollo",
+  "description": "Snack natural de pollo para perros",
+  "category": "Snacks",
+  "price": 15000,
+  "stock": 20
+}
+
+###
+
+### 2. Crear segundo producto
+POST http://localhost:8080/api/v1/products
+Content-Type: application/json
+
+{
+  "name": "Hueso de carne",
+  "description": "Snack de carne para perros",
+  "category": "Snacks",
+  "price": 12000,
+  "stock": 15
+}
+
+###
+
+### 3. Listar todos los productos
+GET http://localhost:8080/api/v1/products
+
+###
+
+### 4. Buscar producto por ID
+GET http://localhost:8080/api/v1/products/1
+
+###
+
+### 5. Actualizar producto
+PUT http://localhost:8080/api/v1/products/1
+Content-Type: application/json
+
+{
+  "name": "Galletas de pollo premium",
+  "description": "Snack natural premium de pollo para perros",
+  "category": "Snacks Premium",
+  "price": 18000,
+  "stock": 25
+}
+
+###
+
+### 6. Buscar producto inexistente
+GET http://localhost:8080/api/v1/products/999
+
+###
+
+### 7. Intentar crear producto inválido
+POST http://localhost:8080/api/v1/products
+Content-Type: application/json
+
+{
+  "name": "",
+  "description": "",
+  "category": "",
+  "price": -5000,
+  "stock": -10
+}
+
+###
+
+### 8. Eliminar producto
+DELETE http://localhost:8080/api/v1/products/2
+
+###

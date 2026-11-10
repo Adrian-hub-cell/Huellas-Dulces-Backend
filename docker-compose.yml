@@ -1,0 +1,60 @@
+﻿
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: huellas-postgres
+    environment:
+      POSTGRES_DB: huellas_dulces
+      POSTGRES_USER: huellas
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?Set_POSTGRES_PASSWORD_in_.env}"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U huellas -d huellas_dulces"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongo:
+    image: mongo:8
+    container_name: huellas-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:7-alpine
+    container_name: huellas-redis
+    ports:
+      - "6379:6379"
+
+  app:
+    build: .
+    container_name: huellas-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_started
+      redis:
+        condition: service_started
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_URL: jdbc:postgresql://postgres:5432/huellas_dulces
+      DB_USERNAME: huellas
+      DB_PASSWORD: "${DB_PASSWORD:?Set_DB_PASSWORD_in_.env}"
+      MONGODB_URI: mongodb://mongo:27017/huellas_dulces
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_USERNAME: ""
+      REDIS_PASSWORD: "${REDIS_PASSWORD:-}"
+      JWT_SECRET: "${JWT_SECRET:?Set_JWT_SECRET_in_.env}"
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
+  mongo_data:
