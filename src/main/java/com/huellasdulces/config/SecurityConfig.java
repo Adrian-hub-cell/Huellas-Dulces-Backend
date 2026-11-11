@@ -1,9 +1,11 @@
-
 package com.huellasdulces.config;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import com.huellasdulces.model.Customer;
+import com.huellasdulces.repository.CustomerRepository;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,6 +22,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -35,18 +39,41 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-        return new InMemoryUserDetailsManager(
-                User.withUsername("admin")
-                        .password(encoder.encode("AdminDev2026!"))
-                        .roles("ADMIN")
-                        .build(),
+    public UserDetailsService userDetailsService(
+            PasswordEncoder encoder,
+            CustomerRepository customerRepository) {
 
-                User.withUsername("usuario")
-                        .password(encoder.encode("UsuarioDev2026!"))
+        InMemoryUserDetailsManager defaultUsers =
+                new InMemoryUserDetailsManager(
+                        User.withUsername("admin")
+                                .password(encoder.encode("AdminDev2026!"))
+                                .roles("ADMIN")
+                                .build(),
+
+                        User.withUsername("usuario")
+                                .password(encoder.encode("UsuarioDev2026!"))
+                                .roles("USER")
+                                .build()
+                );
+
+        return username -> {
+            try {
+                return defaultUsers.loadUserByUsername(username);
+            } catch (UsernameNotFoundException ignored) {
+                Customer customer = customerRepository
+                        .findByUsernameIgnoreCase(username)
+                        .orElseThrow(() ->
+                                new UsernameNotFoundException(
+                                        "Usuario no encontrado"
+                                )
+                        );
+
+                return User.withUsername(customer.getUsername())
+                        .password(customer.getPasswordHash())
                         .roles("USER")
-                        .build()
-        );
+                        .build();
+            }
+        };
     }
 
     @Bean
@@ -93,6 +120,8 @@ public class SecurityConfig {
             throws Exception {
 
         http
+            .cors(Customizer.withDefaults())
+
             .csrf(AbstractHttpConfigurer::disable)
 
             .sessionManagement(session -> session
@@ -100,7 +129,13 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
 
-                .requestMatchers("/api/v1/auth/login").permitAll()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                .requestMatchers(
+                        HttpMethod.POST,
+                        "/api/v1/auth/register",
+                        "/api/v1/auth/login"
+                ).permitAll()
 
                 .requestMatchers(
                         "/v3/api-docs/**",
@@ -108,13 +143,15 @@ public class SecurityConfig {
                         "/swagger-ui.html"
                 ).permitAll()
 
+                .requestMatchers("/ws").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/products/**")
                     .hasAnyRole("USER", "ADMIN")
 
                 .requestMatchers("/api/v1/products/**")
                     .hasRole("ADMIN")
 
-                .anyRequest().authenticated()
+                .requestMatchers("/ws").permitAll()
+            .anyRequest().authenticated()
             )
 
             .oauth2ResourceServer(oauth2 ->
@@ -128,3 +165,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+

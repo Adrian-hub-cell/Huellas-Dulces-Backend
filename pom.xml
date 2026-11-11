@@ -28,6 +28,12 @@
 
     <dependencies>
 
+        <!-- WebSocket y STOMP -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
         <!-- API web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

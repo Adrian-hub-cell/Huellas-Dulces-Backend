@@ -1,4 +1,3 @@
-
 package com.huellasdulces.controller;
 
 import com.huellasdulces.dto.ProductRequest;
@@ -36,6 +35,13 @@ public class ProductController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<ProductResponse> getAllProducts() {
         return productService.getAllProducts();
+    }
+
+    @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public List<ProductResponse> searchProducts(
+            @RequestParam("q") String query) {
+        return productService.searchProducts(query);
     }
 
     @GetMapping("/categories")

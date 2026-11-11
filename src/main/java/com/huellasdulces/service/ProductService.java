@@ -1,4 +1,3 @@
-
 package com.huellasdulces.service;
 
 import com.huellasdulces.dto.ProductRequest;
@@ -12,6 +11,8 @@ public interface ProductService {
     ProductResponse createProduct(ProductRequest productRequest);
 
     List<ProductResponse> getAllProducts();
+
+    List<ProductResponse> searchProducts(String query);
 
     List<String> getProductCategories();
 

@@ -1,4 +1,3 @@
-
 package com.huellasdulces.model;
 
 import jakarta.persistence.*;
@@ -36,4 +35,10 @@ public class Customer {
 
     @Column(length = 255)
     private String address;
+
+    @Column(length = 80, unique = true)
+    private String username;
+
+    @Column(name = "password_hash", length = 100)
+    private String passwordHash;
 }

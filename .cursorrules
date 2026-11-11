@@ -1,0 +1,59 @@
+﻿# Huellas Dulces - Backend
+# Reglas obligatorias para asistentes de IA
+
+## Contexto del proyecto
+- Proyecto: Huellas Dulces.
+- Backend desarrollado con Java 25 y Spring Boot 4.
+- API REST para la gestión de productos y usuarios.
+- Mantener la implementación existente y evitar reescrituras innecesarias.
+
+## Arquitectura
+- config: configuración de seguridad, CORS y WebSocket.
+- controller: controladores REST.
+- document: documentos de persistencia documental.
+- dto: objetos de transferencia de datos.
+- exception: excepciones y manejo de errores.
+- mapper: conversión entre entidades y DTO.
+- model: entidades del dominio.
+- repository: acceso a datos.
+- service: lógica de negocio.
+
+## Reglas de desarrollo
+- Respetar la arquitectura por capas.
+- No colocar lógica de negocio en los controladores.
+- Usar DTO para las entradas y salidas de la API cuando corresponda.
+- Validar los datos recibidos.
+- Mantener respuestas HTTP y manejo de errores coherentes.
+- No duplicar servicios, entidades ni repositorios existentes.
+- No modificar contratos de endpoints sin justificarlo.
+- No eliminar funcionalidades existentes.
+- Mantener compatibilidad con Java 25 y Spring Boot 4.
+
+## Seguridad
+- Mantener autenticación y autorización mediante JWT.
+- No desactivar Spring Security para solucionar errores.
+- No almacenar contraseñas en texto plano.
+- Usar BCrypt para contraseñas.
+- No exponer secretos, tokens ni credenciales.
+- No incluir archivos .env ni credenciales en Git.
+- Respetar la configuración CORS existente.
+- Mantener autenticación JWT en las conexiones STOMP.
+
+## Persistencia
+- Respetar las entidades y repositorios existentes.
+- No modificar migraciones ya aplicadas sin analizar sus consecuencias.
+- Mantener compatibilidad con las bases de datos configuradas.
+- No eliminar datos ni ejecutar operaciones destructivas sin autorización.
+
+## Calidad
+- Preferir cambios pequeños y verificables.
+- Ejecutar pruebas o compilación después de modificar código.
+- No afirmar que una funcionalidad está terminada sin verificarla.
+- Explicar los cambios y señalar los archivos afectados.
+- Ante errores, investigar la causa antes de proponer reescrituras.
+
+## Protección del trabajo
+- Antes de reemplazar un archivo, revisar su contenido actual.
+- No borrar respaldos ni archivos del usuario sin autorización.
+- No inventar funcionalidades que no estén implementadas.
+- Priorizar la continuidad del proyecto Huellas Dulces.

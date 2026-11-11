@@ -78,6 +78,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(value = "productSearch", key = "#query")
+    public List<ProductResponse> searchProducts(String query) {
+
+        if (query == null || query.isBlank()) {
+            return productRepository.findAll()
+                    .stream()
+                    .map(productMapper::toResponse)
+                    .toList();
+        }
+
+        return productRepository.searchByTerm(query.trim())
+                .stream()
+                .map(productMapper::toResponse)
+                .toList();
+    }
+    @Override
     @Cacheable("productCategories")
     public List<String> getProductCategories() {
 
