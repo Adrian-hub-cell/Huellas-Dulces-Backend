@@ -1,160 +1,118 @@
-# 🐾 Huellas Dulces
+﻿# Huellas Dulces
 
-**API REST para la gestión de productos e inventario de Huellas Dulces.**
+API REST para la gestión de productos, inventario, usuarios y perfiles de una tienda de mascotas.
 
-Huellas Dulces es un proyecto desarrollado con Java y Spring Boot, orientado a la administración de productos, control de inventario, autenticación de usuarios y almacenamiento de información.
+Desarrollada con Java 25 y Spring Boot 4, con arquitectura por capas e integración con un frontend Angular 21.
 
-## 🚀 Tecnologías utilizadas
+## Tecnologías utilizadas
 
-- Java 25
-- Spring Boot 4
-- Spring Web MVC
-- Spring Security
-- JWT (JSON Web Token)
-- Spring Data JPA
-- Hibernate
-- H2 Database
-- PostgreSQL
-- MongoDB
-- Redis
-- Flyway
-- MapStruct
-- Resilience4j
-- Spring RestClient
-- Spring Boot Actuator
-- Maven
-- Docker
+- Java 25 y Spring Boot 4.
+- Spring Web MVC y Spring Security.
+- JWT (JSON Web Token).
+- Spring Data JPA e Hibernate.
+- H2 y PostgreSQL.
+- MongoDB y Redis.
+- Flyway y MapStruct.
+- Resilience4j y Spring RestClient.
+- Spring Boot Actuator.
+- WebSocket y STOMP.
+- Maven y Docker.
 
-## 🏗️ Arquitectura del proyecto
+## Arquitectura del proyecto
 
-El proyecto utiliza una **arquitectura basada en capas**, que permite separar las responsabilidades, mejorar la organización del código y facilitar su mantenimiento y escalabilidad.
+El backend utiliza una arquitectura por capas para separar responsabilidades y facilitar el mantenimiento.
 
-### Estructura principal
+Paquetes principales:
 
-```text
-src/main/java/com/huellasdulces
-│
-├── config/
-│   ├── CacheConfig.java
-│   ├── JpaAuditingConfig.java
-│   ├── JwtConfig.java
-│   ├── MongoAuditingConfig.java
-│   ├── OpenApiConfig.java
-│   ├── ProductMapperConfig.java
-│   └── SecurityConfig.java
-│
-├── controller/
-│   ├── AuthController.java
-│   ├── ExternalCatalogController.java
-│   └── ProductController.java
-│
-├── document/
-│   └── ProductAuditDocument.java
-│
-├── dto/
-│   ├── LoginRequest.java
-│   ├── LoginResponse.java
-│   ├── ProductRequest.java
-│   ├── ProductResponse.java
-│   └── StockRequest.java
-│
-├── exception/
-│   ├── GlobalExceptionHandler.java
-│   ├── ProductNotFoundException.java
-│   └── StockConflictException.java
-│
-├── mapper/
-│   └── ProductMapper.java
-│
-├── model/
-│   ├── Customer.java
-│   ├── Order.java
-│   ├── OrderStatus.java
-│   ├── Product.java
-│   └── Supplier.java
-│
-├── repository/
-│   ├── ProductAuditRepository.java
-│   └── ProductRepository.java
-│
-├── service/
-│   ├── AuthService.java
-│   ├── ExternalCatalogService.java
-│   ├── ProductService.java
-│   └── ProductServiceImpl.java
-│
-└── HuellasDulcesApplication.java
-```
+- `config`: configuración de seguridad, JWT, CORS, WebSocket, caché y OpenAPI.
+- `controller`: controladores REST de autenticación, productos, catálogo externo y perfiles.
+- `document`: documentos de auditoría.
+- `dto`: objetos de transferencia de datos.
+- `exception`: manejo de excepciones.
+- `mapper`: transformación de objetos.
+- `model`: entidades del dominio.
+- `repository`: acceso a datos.
+- `service`: lógica de negocio.
 
-### Recursos y configuraciones
+## Funcionalidades principales
 
-```text
-src/main/resources
-│
-├── db/
-│   └── migration/
-│       ├── V1__create_initial_schema.sql
-│       ├── V2__create_suppliers_customers_orders.sql
-│       └── V3__add_product_audit_fields.sql
-│
-├── application.properties
-├── application-dev.properties
-└── application-prod.properties
-```
+### Gestión de productos e inventario
 
-## ⚙️ Funcionalidades principales
-
-### Gestión de productos
-- Crear productos.
-- Consultar todos los productos.
-- Consultar productos por identificador.
-- Actualizar información de productos.
-- Eliminar productos.
+- Crear, consultar, actualizar y eliminar productos.
 - Consultar categorías.
-- Controlar las existencias del inventario.
-- Registrar retiros de inventario con validación de stock.
+- Controlar existencias.
+- Registrar retiros de inventario.
+- Validar disponibilidad de stock.
 
 ### Seguridad y autenticación
-- Autenticación mediante JWT.
+
+- Inicio de sesión mediante JWT.
 - Protección de endpoints con Spring Security.
 - Autorización basada en roles.
 - Roles de administrador y usuario.
 - Contraseñas protegidas mediante BCrypt.
-- Configuración de sesiones sin estado (stateless).
+- Sesiones sin estado (stateless).
+- Configuración CORS restringida al origen `http://localhost:4200`.
 
 ### Persistencia y auditoría
+
 - Persistencia relacional mediante Spring Data JPA.
-- Configuración de PostgreSQL para producción.
-- Base de datos H2 para desarrollo.
-- Auditoría de operaciones mediante MongoDB.
-- Registro de creación, modificación y movimientos de inventario.
-- Auditoría automática de fechas y usuarios responsables.
+- H2 para desarrollo.
+- PostgreSQL para producción.
+- MongoDB para auditoría.
+- Auditoría de creación, modificación y movimientos de inventario.
+- Registro automático de fechas y usuarios responsables.
 
 ### Caché
+
 - Caché de productos y categorías.
 - SimpleCacheManager para desarrollo.
-- Redis para el perfil de producción.
+- Redis para producción.
 - Invalidación de caché al modificar el inventario.
 
 ### Integración externa y resiliencia
-- Integración con OpenPetFoodFacts mediante RestClient.
-- Configuración de Circuit Breaker con Resilience4j.
-- Tiempo límite de respuesta de 1.5 segundos.
+
+- Consulta de OpenPetFoodFacts mediante RestClient.
+- Circuit Breaker con Resilience4j.
+- Tiempo límite de respuesta configurado.
 - Mecanismo de fallback cuando el servicio externo no está disponible.
-- Mensaje de validación manual requerido por Huellas Dulces.
+
+### Perfil y avatares
+
+El backend permite administrar la información del perfil del usuario y sus imágenes:
+
+- Consultar y actualizar el perfil.
+- Recibir imágenes mediante `MultipartFile`.
+- Validar el formato WebP.
+- Limitar el tamaño del avatar a 1 MB.
+- Almacenar los datos de imagen y su tipo de contenido.
+- Consultar y eliminar el avatar.
+
+El procesamiento y redimensionamiento de la imagen se realiza en el frontend antes de enviarla al backend.
+
+### Comunicación en tiempo real
+
+La aplicación incorpora configuración de WebSocket con STOMP:
+
+- Habilitación del soporte de mensajería.
+- Registro de endpoints STOMP.
+- Configuración de orígenes permitidos.
+- Integración con el frontend Angular para funcionalidades de tiempo real.
 
 ### Monitoreo y rendimiento
+
 - Spring Boot Actuator.
-- Endpoint de salud de la aplicación.
+- Endpoint de salud.
+- Métricas de aplicación.
 - Métricas personalizadas de conflictos de inventario.
 - Métricas de eventos de fallback.
-- Habilitación de Virtual Threads.
+- Configuración de Virtual Threads.
 
-## 🔗 Endpoints principales
+## Endpoints principales
 
 | Método | Endpoint | Descripción |
 |---|---|---|
-| POST | `/api/v1/auth/login` | Iniciar sesión |
+| POST | `/api/v1/auth/login` | Inicio de sesión |
 | GET | `/api/v1/products` | Consultar productos |
 | GET | `/api/v1/products/{id}` | Consultar producto |
 | GET | `/api/v1/products/categories` | Consultar categorías |
@@ -163,28 +121,41 @@ src/main/resources
 | DELETE | `/api/v1/products/{id}` | Eliminar producto |
 | POST | `/api/v1/products/{id}/withdraw` | Retirar inventario |
 | GET | `/api/v1/external-catalog/search` | Consultar catálogo externo |
+| GET | `/api/v1/profile/me` | Consultar perfil |
+| PUT | `/api/v1/profile/me` | Actualizar perfil |
+| PUT | `/api/v1/profile/me/avatar` | Subir avatar |
+| GET | `/api/v1/profile/me/avatar` | Consultar avatar |
+| DELETE | `/api/v1/profile/me/avatar` | Eliminar avatar |
 | GET | `/actuator/health` | Estado de la aplicación |
-| GET | `/actuator/metrics` | Métricas de la aplicación |
+| GET | `/actuator/metrics` | Métricas |
 
-**Nota:** Los endpoints protegidos requieren autenticación y los permisos correspondientes.
+Los endpoints protegidos requieren autenticación y los permisos correspondientes.
 
-## 🧪 Ejecución del proyecto
+## Configuración CORS y WebSocket
+
+El backend restringe los orígenes HTTP y WebSocket al frontend local:
+
+`http://localhost:4200`
+
+La configuración se encuentra en `CorsConfig.java`, `SecurityConfig.java` y `WebSocketConfig.java`.
+
+## Ejecución del proyecto
 
 ### Requisitos
+
 - Java 25.
 - Maven.
-- Visual Studio Code o IntelliJ IDEA.
 - Git.
+- Visual Studio Code o IntelliJ IDEA.
+- Docker (opcional).
 
-### Ejecutar en desarrollo
-
-En Windows:
+### Ejecutar en Windows
 
 ```bash
 mvnw.cmd spring-boot:run
 ```
 
-También se puede ejecutar mediante:
+Ejecutar las pruebas:
 
 ```bash
 mvnw.cmd clean test
@@ -198,40 +169,44 @@ Con la aplicación iniciada:
 - OpenAPI JSON: `http://localhost:8080/v3/api-docs`
 - H2 Console: `http://localhost:8080/h2-console`
 
-## 🐳 Docker
+## Docker
 
-El proyecto incluye:
-
-- `Dockerfile`: construcción de la imagen de la aplicación.
-- `docker-compose.yml`: configuración de los servicios de la aplicación, PostgreSQL, MongoDB y Redis.
-
-Para iniciar los servicios:
+El proyecto incluye configuración para ejecutar la aplicación y servicios de infraestructura mediante Docker Compose.
 
 ```bash
 docker compose up --build
 ```
 
-La ejecución requiere tener Docker instalado y configurar las variables de entorno necesarias.
+Se deben configurar las variables de entorno requeridas antes de utilizar los perfiles correspondientes.
 
-## 🔐 Perfiles de configuración
+## Perfiles de configuración
 
-El proyecto cuenta con dos perfiles:
+- `dev`: desarrollo con H2 y caché en memoria.
+- `prod`: producción con PostgreSQL, MongoDB y Redis.
 
-- **dev:** configuración de desarrollo con H2 y caché en memoria.
-- **prod:** configuración para producción con PostgreSQL, MongoDB y Redis.
+Las credenciales y secretos deben suministrarse mediante variables de entorno.
 
-Las credenciales y secretos de producción deben suministrarse mediante variables de entorno.
+## Flujo de integración frontend y backend
 
-## 📦 Control de versiones
+1. El usuario inicia sesión desde Angular.
+2. El frontend envía las credenciales al endpoint de autenticación.
+3. El backend valida las credenciales y genera un JWT.
+4. Angular adjunta el token Bearer a las solicitudes protegidas.
+5. Spring Security valida el acceso a los recursos.
+6. Los controladores reciben las solicitudes y delegan la lógica a los servicios.
+7. Los repositorios administran la persistencia de la información.
+8. WebSocket y STOMP permiten la comunicación en tiempo real.
+9. El perfil recibe y almacena los avatares procesados por el frontend.
 
-El proyecto utiliza Git y GitHub para el control de versiones y el seguimiento de los avances.
+## Control de versiones
 
-Repositorio:
+El proyecto utiliza Git y GitHub para mantener el historial de cambios.
 
-https://github.com/Adrian-hub-cell/Huellas-Dulces
+Repositorio backend:
 
-## 👨‍💻 Autor
+https://github.com/Adrian-hub-cell/Huellas-Dulces-Backend
 
-**Desarrollado por:** Adrian Gonzalez Sanchez.
+## Autor
 
-Proyecto académico Huellas Dulces, desarrollado con Java y Spring Boot.
+Proyecto académico Huellas Dulces.
+Desarrollado con Java 25 y Spring Boot 4.
