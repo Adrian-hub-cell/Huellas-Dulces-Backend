@@ -1,3 +1,4 @@
+
 package com.huellasdulces.config;
 
 import java.util.ArrayList;
@@ -143,15 +144,18 @@ public class SecurityConfig {
                         "/swagger-ui.html"
                 ).permitAll()
 
+                .requestMatchers("/actuator/health", "/actuator/health/**")
+                    .permitAll()
+
                 .requestMatchers("/ws").permitAll()
+
                 .requestMatchers(HttpMethod.GET, "/api/v1/products/**")
                     .hasAnyRole("USER", "ADMIN")
 
                 .requestMatchers("/api/v1/products/**")
                     .hasRole("ADMIN")
 
-                .requestMatchers("/ws").permitAll()
-            .anyRequest().authenticated()
+                .anyRequest().authenticated()
             )
 
             .oauth2ResourceServer(oauth2 ->
@@ -165,4 +169,3 @@ public class SecurityConfig {
         return http.build();
     }
 }
-
