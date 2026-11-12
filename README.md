@@ -1,4 +1,4 @@
-﻿# Huellas Dulces
+# Huellas Dulces
 
 API REST para la gestión de productos, inventario, usuarios y perfiles de una tienda de mascotas.
 
@@ -210,3 +210,36 @@ https://github.com/Adrian-hub-cell/Huellas-Dulces-Backend
 
 Proyecto académico Huellas Dulces.
 Desarrollado con Java 25 y Spring Boot 4.
+
+## Pruebas automatizadas y cobertura
+
+El backend utiliza JUnit 5, AssertJ, Mockito, Spring Boot Test y Testcontainers.
+
+### Tipos de pruebas
+
+- **Pruebas unitarias:** servicios, modelos, controladores, excepciones y mapeadores.
+- **Pruebas de seguridad:** MockMvc y `@WithMockUser`.
+- **Pruebas de integración:** migraciones Flyway con PostgreSQL y Testcontainers.
+- **Pruebas WebSocket:** autenticación JWT en conexiones STOMP.
+
+### Ejecución
+
+Ejecutar `mvnw.cmd clean verify` para ejecutar las pruebas y generar el informe JaCoCo.
+
+### Resultados de cobertura JaCoCo
+
+| Métrica | Cobertura | Objetivo |
+|---|---:|---:|
+| Instructions | 92.93 % | 80 % |
+| Branches | 80.36 % | 80 % |
+| Lines | 93.07 % | 80 % |
+| Complexity | 84.27 % | 80 % |
+| Methods | 88.63 % | 80 % |
+| Classes | 100 % | 80 % |
+
+Todas las métricas alcanzan o superan el objetivo mínimo del 80 %.
+
+### Informes
+
+- HTML: `target/site/jacoco/index.html`
+- XML: `target/site/jacoco/jacoco.xml`

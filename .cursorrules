@@ -57,3 +57,21 @@
 - No borrar respaldos ni archivos del usuario sin autorización.
 - No inventar funcionalidades que no estén implementadas.
 - Priorizar la continuidad del proyecto Huellas Dulces.
+
+## Pruebas automatizadas y TDD
+
+- Utilizar JUnit 5 para las pruebas del backend.
+- Utilizar AssertJ para las validaciones de resultados.
+- Utilizar Mockito para aislar dependencias en pruebas unitarias.
+- Utilizar MockMvc para probar controladores y endpoints REST.
+- Probar los permisos y roles mediante `@WithMockUser`.
+- Utilizar Testcontainers para las pruebas de integración con PostgreSQL.
+- Verificar las migraciones de base de datos mediante Flyway.
+- Probar la autenticación JWT y las conexiones WebSocket/STOMP.
+- Aplicar el ciclo Red-Green-Refactor al desarrollar nuevas funcionalidades.
+- No eliminar ni debilitar pruebas para conseguir resultados de cobertura.
+- Mantener una cobertura mínima del 80 % en instrucciones, ramas, líneas, métodos y clases.
+- Ejecutar `mvnw.cmd clean verify` después de cambios relevantes.
+- Revisar los informes de cobertura generados por JaCoCo.
+- Documentar únicamente los resultados reales de las pruebas.
+- No modificar código de producción únicamente para aumentar artificialmente la cobertura.

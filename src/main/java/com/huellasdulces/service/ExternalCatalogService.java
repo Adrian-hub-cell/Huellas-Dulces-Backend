@@ -1,10 +1,11 @@
+
 package com.huellasdulces.service;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.micrometer.core.instrument.Counter;
@@ -13,6 +14,7 @@ import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -26,6 +28,7 @@ public class ExternalCatalogService {
     private final RestClient restClient;
     private final Counter catalogFallbackCounter;
 
+    @Autowired
     public ExternalCatalogService(MeterRegistry meterRegistry) {
 
         SimpleClientHttpRequestFactory requestFactory =
@@ -40,8 +43,19 @@ public class ExternalCatalogService {
                 .defaultHeader("User-Agent", "HuellasDulces/1.0")
                 .build();
 
-        this.catalogFallbackCounter = Counter.builder(
-                "huellasdulces.catalog.fallbacks")
+        this.catalogFallbackCounter = createFallbackCounter(meterRegistry);
+    }
+
+    ExternalCatalogService(
+            MeterRegistry meterRegistry,
+            RestClient restClient) {
+
+        this.restClient = restClient;
+        this.catalogFallbackCounter = createFallbackCounter(meterRegistry);
+    }
+
+    private Counter createFallbackCounter(MeterRegistry meterRegistry) {
+        return Counter.builder("huellasdulces.catalog.fallbacks")
                 .description("Cantidad de activaciones del respaldo del catalogo externo")
                 .register(meterRegistry);
     }
