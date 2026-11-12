@@ -190,6 +190,12 @@ public class ProductServiceImpl implements ProductService {
 
         int quantity = stockRequest.quantity();
 
+        if (quantity <= 0) {
+            throw new IllegalArgumentException(
+                    "La cantidad debe ser mayor que cero"
+            );
+        }
+
         if (quantity > currentStock) {
 
             stockConflictCounter.increment();
