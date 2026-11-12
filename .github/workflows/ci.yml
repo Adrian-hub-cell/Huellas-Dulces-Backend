@@ -29,6 +29,8 @@ jobs:
         run: chmod +x mvnw
 
       - name: Compilar y ejecutar pruebas
+        env:
+          SECURITY_JWT_SECRET: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
         run: ./mvnw -B clean verify
 
       - name: Verificar cobertura minima del 80 por ciento
