@@ -68,6 +68,8 @@ services:
       REDIS_USERNAME: ""
       REDIS_PASSWORD: "${REDIS_PASSWORD:-}"
       JWT_SECRET: "${JWT_SECRET:?Set_JWT_SECRET_in_.env}"
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD:?Set_ADMIN_PASSWORD_in_.env}"
+      USER_PASSWORD: "${USER_PASSWORD:?Set_USER_PASSWORD_in_.env}"
     ports:
       - "127.0.0.1:8080:8080"
     healthcheck:

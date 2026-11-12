@@ -1,4 +1,3 @@
-
 package com.huellasdulces.config;
 
 import java.util.ArrayList;
@@ -8,6 +7,7 @@ import java.util.List;
 import com.huellasdulces.model.Customer;
 import com.huellasdulces.repository.CustomerRepository;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,6 +22,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,25 +42,37 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(
+            @Value("${ADMIN_PASSWORD:}") String adminPassword,
+            @Value("${USER_PASSWORD:}") String userPassword,
             PasswordEncoder encoder,
             CustomerRepository customerRepository) {
 
-        InMemoryUserDetailsManager defaultUsers =
-                new InMemoryUserDetailsManager(
-                        User.withUsername("admin")
-                                .password(encoder.encode("AdminDev2026!"))
-                                .roles("ADMIN")
-                                .build(),
+        List<UserDetails> defaultUsers = new ArrayList<>();
 
-                        User.withUsername("usuario")
-                                .password(encoder.encode("UsuarioDev2026!"))
-                                .roles("USER")
-                                .build()
-                );
+        if (adminPassword != null && !adminPassword.isBlank()) {
+            defaultUsers.add(
+                    User.withUsername("admin")
+                            .password(encoder.encode(adminPassword))
+                            .roles("ADMIN")
+                            .build()
+            );
+        }
+
+        if (userPassword != null && !userPassword.isBlank()) {
+            defaultUsers.add(
+                    User.withUsername("usuario")
+                            .password(encoder.encode(userPassword))
+                            .roles("USER")
+                            .build()
+            );
+        }
+
+        InMemoryUserDetailsManager defaultUserManager =
+                new InMemoryUserDetailsManager(defaultUsers);
 
         return username -> {
             try {
-                return defaultUsers.loadUserByUsername(username);
+                return defaultUserManager.loadUserByUsername(username);
             } catch (UsernameNotFoundException ignored) {
                 Customer customer = customerRepository
                         .findByUsernameIgnoreCase(username)

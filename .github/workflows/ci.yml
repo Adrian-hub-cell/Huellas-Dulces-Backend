@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build-and-test:
-    name: Build, tests and coverage
+    name: Build, tests, coverage and SonarCloud
     runs-on: ubuntu-latest
 
     steps:
@@ -71,6 +71,17 @@ jobs:
 
           print("Cobertura aprobada.")
           PY
+
+      - name: Analizar con SonarCloud
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          ./mvnw -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.projectKey=Adrian-hub-cell_Huellas-Dulces-Backend \
+            -Dsonar.organization=adrian-hub-cell \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
       - name: Guardar reporte de cobertura
         if: always()
