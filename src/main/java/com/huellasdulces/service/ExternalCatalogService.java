@@ -1,4 +1,5 @@
 
+
 package com.huellasdulces.service;
 
 import java.time.Duration;
@@ -66,7 +67,7 @@ public class ExternalCatalogService {
     )
     public CatalogValidationResponse searchProducts(String productName) {
 
-        log.info("Consultando catalogo externo para: {}", productName);
+        log.info("Iniciando consulta al catalogo externo.");
 
         JsonNode response = restClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -115,11 +116,7 @@ public class ExternalCatalogService {
 
         catalogFallbackCounter.increment();
 
-        log.error(
-                "Fallo la consulta del catalogo externo para '{}'. Causa: ",
-                productName,
-                exception
-        );
+        log.error("Fallo la consulta del catalogo externo.");
 
         return new CatalogValidationResponse(
                 true,
