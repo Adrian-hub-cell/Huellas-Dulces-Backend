@@ -239,6 +239,23 @@ Ejecutar `mvnw.cmd clean verify` para ejecutar las pruebas y generar el informe 
 
 Todas las métricas alcanzan o superan el objetivo mínimo del 80 %.
 
+# Reto 11 – Cloud & DevOps Transformation
+**Proyecto: Huellas Dulces**
+
+Se presenta el proceso de transformación Cloud & DevOps del proyecto Huellas Dulces.
+
+Durante el desarrollo se implementaron procesos de integración continua (CI) mediante GitHub Actions para el backend y frontend. También se realizó el análisis de calidad del código con SonarCloud, obteniendo un Quality Gate aprobado y una cobertura del 89,6 %.
+
+Se configuró el despliegue en Render y se dispone de una URL pública para el frontend. El despliegue del backend presentó un inconveniente técnico pendiente de solucionar.
+
+**Repositorios:**
+- Backend: https://github.com/Adrian-hub-cell/Huellas-Dulces-Backend
+- Frontend: https://github.com/Adrian-hub-cell/Huellas-Dulces-Frontend.
+
+**Frontend:** https://huellas-dulces-frontend.onrender.com
+
+**Backend:** https://huellas-dulces-backend.onrender.com
+
 ### Informes
 
 - HTML: `target/site/jacoco/index.html`
